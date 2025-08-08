@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualNetworks_app_vnet_name": {
-            "defaultValue": "app-vnet",
+            "defaultValue": "app_vnet",
             "type": "String"
         },
         "virtualNetworks_hub_vnet_name": {
@@ -30,8 +30,8 @@
                 },
                 "subnets": [
                     {
-                        "name": "frontend",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_app_vnet_name'), 'frontend')]",
+                        "name": "FrontEnd",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_app_vnet_name'), 'FrontEnd')]",
                         "properties": {
                             "addressPrefixes": [
                                 "10.1.0.0/24"
@@ -43,8 +43,8 @@
                         "type": "Microsoft.Network/virtualNetworks/subnets"
                     },
                     {
-                        "name": "backend",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_app_vnet_name'), 'backend')]",
+                        "name": "BackEnd",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_app_vnet_name'), 'BackEnd')]",
                         "properties": {
                             "addressPrefixes": [
                                 "10.1.1.0/24"
@@ -77,11 +77,11 @@
                 },
                 "subnets": [
                     {
-                        "name": "AzureFirewallSubnet",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'AzureFirewallSubnet')]",
+                        "name": "HubSubnet",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_hub_vnet_name'), 'HubSubnet')]",
                         "properties": {
                             "addressPrefixes": [
-                                "10.0.0.0/26"
+                                "10.0.0.0/24"
                             ],
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Disabled",
@@ -97,13 +97,13 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2024-01-01",
-            "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/AzureFirewallSubnet')]",
+            "name": "[concat(parameters('virtualNetworks_hub_vnet_name'), '/HubSubnet')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_hub_vnet_name'))]"
             ],
             "properties": {
                 "addressPrefixes": [
-                    "10.0.0.0/26"
+                    "10.0.0.0/24"
                 ],
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Disabled",
@@ -113,7 +113,7 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2024-01-01",
-            "name": "[concat(parameters('virtualNetworks_app_vnet_name'), '/backend')]",
+            "name": "[concat(parameters('virtualNetworks_app_vnet_name'), '/BackEnd')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_app_vnet_name'))]"
             ],
@@ -129,7 +129,7 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2024-01-01",
-            "name": "[concat(parameters('virtualNetworks_app_vnet_name'), '/frontend')]",
+            "name": "[concat(parameters('virtualNetworks_app_vnet_name'), '/FrontEnd')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_app_vnet_name'))]"
             ],
